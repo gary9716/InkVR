@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'UNITY_PASS_TEXCUBE(unity_SpecCube1)' with 'UNITY_PASS_TEXCUBE_SAMPLER(unity_SpecCube1,unity_SpecCube0)'
+
 
 // Toony Colors Pro+Mobile 2
 // (c) 2014-2016 Jean Moreno
@@ -137,7 +139,7 @@ Shader "Hidden/Toony Colors Pro 2/Variants/Desktop Specular Reflection"
 				half3 worldNormal1 = worldNormal;
 				#endif
 				
-				half3 env1 = Unity_GlossyEnvironment (UNITY_PASS_TEXCUBE(unity_SpecCube1), unity_SpecCube1_HDR, worldNormal1, 1-oneMinusRoughness);
+				half3 env1 = Unity_GlossyEnvironment (UNITY_PASS_TEXCUBE_SAMPLER(unity_SpecCube1,unity_SpecCube0), unity_SpecCube1_HDR, worldNormal1, 1-oneMinusRoughness);
 				reflColor = lerp(env1, env0, blendLerp);
 			}
 			else

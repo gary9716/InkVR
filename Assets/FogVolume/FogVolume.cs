@@ -406,7 +406,7 @@ public class FogVolume : MonoBehaviour
         mesh.triangles = triangles;
 
         mesh.RecalculateBounds();
-        mesh.Optimize();
+        ;
     }
 
     void Start()
