@@ -7,15 +7,16 @@ namespace Spout{
 	[RequireComponent (typeof(Camera))]
 	[ExecuteInEditMode]
 	public class InvertCamera : MonoBehaviour {
-		//public Camera camera;
+		public Camera camera;
 		void Start () {
-			//camera = get
-		}
+            camera = GetComponent<Camera>();
+
+        }
 		
 		void OnPreCull () {
-			GetComponent<Camera>().ResetWorldToCameraMatrix();
-			GetComponent<Camera>().ResetProjectionMatrix();
-			GetComponent<Camera>().projectionMatrix = GetComponent<Camera>().projectionMatrix * Matrix4x4.Scale(new Vector3(1, -1, 1));
+			camera.ResetWorldToCameraMatrix();
+			camera.ResetProjectionMatrix();
+			camera.projectionMatrix = camera.projectionMatrix * Matrix4x4.Scale(new Vector3(1, -1, 1));
 		}
 		
 		void OnPreRender () {

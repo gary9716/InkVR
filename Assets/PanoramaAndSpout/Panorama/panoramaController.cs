@@ -4,10 +4,12 @@ using System.Collections;
 public class panoramaController : MonoBehaviour {
 
     public int totalNumCam; //please make sure this num can be completely divide 360 
-    
-    public Camera cam;
 
-    GameObject[] allCamGOs;
+    public Transform camsRoot;
+    public Camera cam;
+    public FromSameView fromSaveView;
+
+    Camera[] allCams;
     float widthProportion;
     
     // Use this for initialization
@@ -41,26 +43,25 @@ public class panoramaController : MonoBehaviour {
 
             setVFOV(cam, hFOVDeg);
             
-            allCamGOs = new GameObject[totalNumCam];
-            allCamGOs[0] = camGO;
+            allCams = new Camera[totalNumCam];
+            allCams[0] = cam;
             for (int i = 1;i < totalNumCam;i++)
             {
                 GameObject duplicatedObj = Object.Instantiate<GameObject>(camGO);
                 duplicatedObj.GetComponent<AudioListener>().enabled = false;
-                
-                allCamGOs[i] = duplicatedObj;
+                allCams[i] = duplicatedObj.GetComponent<Camera>();
             }
-            for (int i = 1; i < totalNumCam; i++)
+
+            for(int i = 1;i < totalNumCam;i++)
             {
-                GameObject duplicatedObj = allCamGOs[i];
-                duplicatedObj.transform.parent = camGO.transform;
-                Camera duplicatedCam = duplicatedObj.GetComponent<Camera>();
-                duplicatedCam.rect = new Rect(i * widthProportion, 0, widthProportion, 1);
-                Vector3 angles = duplicatedObj.transform.localEulerAngles;
-                angles.y = i * hFOVDeg;
-                duplicatedObj.transform.localEulerAngles = angles;
+                allCams[i].transform.parent = camsRoot;
             }
-            
+
+            if (fromSaveView != null)
+                fromSaveView.isFollowing = true;
+
+            UpdateCams();
+
         }
 
 	}
@@ -80,20 +81,22 @@ public class panoramaController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        UpdateCams();
+    }
+
+    void UpdateCams()
+    {
         if (cam != null && totalNumCam >= 1)
         {
             float hFOVDeg = getHFOVDeg(cam);
             for (int i = 1; i < totalNumCam; i++)
             {
-                GameObject duplicatedObj = allCamGOs[i];
-                duplicatedObj.transform.parent = allCamGOs[0].transform;
-                Camera duplicatedCam = duplicatedObj.GetComponent<Camera>();
+                Camera duplicatedCam = allCams[i];
                 duplicatedCam.rect = new Rect(i * widthProportion, 0, widthProportion, 1);
-                Vector3 angles = duplicatedObj.transform.localEulerAngles;
+                Vector3 angles = duplicatedCam.transform.localEulerAngles;
                 angles.y = i * hFOVDeg;
-                duplicatedObj.transform.localEulerAngles = angles;
+                duplicatedCam.transform.localEulerAngles = angles;
             }
         }
-            
     }
 }
